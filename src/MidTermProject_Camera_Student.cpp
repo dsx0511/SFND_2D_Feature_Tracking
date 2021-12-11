@@ -19,8 +19,12 @@
 using namespace std;
 
 /* parameters for play around */
-#define DETECTOR_TYPE "BRISK" // SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
-#define DESCRIPTOR_TYPE "BRISK" // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+#define DETECTOR_TYPE "SIFT" // SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
+#define DESCRIPTOR_TYPE "SIFT" // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+
+#define MATCHER_TYPE "MAT_BF" // MAT_BF, MAT_FLANN
+#define MACTHER_DESCRIPTOR_TYPE "DES_HOG" // DES_BINARY, DES_HOG
+#define MATCHER_SELECTOR_TYPE "SEL_NN" // SEL_NN, SEL_KNN
 
 #define VIS_KEYPOINTS false
 #define FOCUS_ON_VEHICLE true
@@ -163,9 +167,9 @@ int main(int argc, const char *argv[])
             /* MATCH KEYPOINT DESCRIPTORS */
 
             vector<cv::DMatch> matches;
-            string matcherType = "MAT_BF";        // MAT_BF, MAT_FLANN
-            string descriptorType = "DES_BINARY"; // DES_BINARY, DES_HOG
-            string selectorType = "SEL_NN";       // SEL_NN, SEL_KNN
+            string matcherType = MATCHER_TYPE;        // MAT_BF, MAT_FLANN
+            string descriptorType = MACTHER_DESCRIPTOR_TYPE; // DES_BINARY, DES_HOG
+            string selectorType = MATCHER_SELECTOR_TYPE;       // SEL_NN, SEL_KNN
 
             //// STUDENT ASSIGNMENT
             //// TASK MP.5 -> add FLANN matching in file matching2D.cpp
