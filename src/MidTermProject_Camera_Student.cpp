@@ -18,6 +18,12 @@
 
 using namespace std;
 
+/* parameters for play around */
+#define DETECTOR_TYPE "SIFT"
+#define VIS_KEYPOINTS false
+#define FOCUS_ON_VEHICLE true
+#define LIMIT_KEYPOINTS false
+
 /* MAIN PROGRAM */
 int main(int argc, const char *argv[])
 {
@@ -75,8 +81,8 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "SIFT"; // SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
-        bool vis_kpts = false;
+        string detectorType = DETECTOR_TYPE; // SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
+        bool vis_kpts = VIS_KEYPOINTS;
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -100,17 +106,23 @@ int main(int argc, const char *argv[])
         //// TASK MP.3 -> only keep keypoints on the preceding vehicle
 
         // only keep keypoints on the preceding vehicle
-        bool bFocusOnVehicle = true;
+        bool bFocusOnVehicle = FOCUS_ON_VEHICLE;
         cv::Rect vehicleRect(535, 180, 180, 150);
         if (bFocusOnVehicle)
         {
-            // ...
+            for (auto it = keypoints.begin(); it != keypoints.end(); ++it)
+            {
+                if (!vehicleRect.contains(it->pt))
+                {
+                    keypoints.erase(it--);
+                }
+            }
         }
 
         //// EOF STUDENT ASSIGNMENT
 
         // optional : limit number of keypoints (helpful for debugging and learning)
-        bool bLimitKpts = true;
+        bool bLimitKpts = LIMIT_KEYPOINTS;
         if (bLimitKpts)
         {
             int maxKeypoints = 50;
