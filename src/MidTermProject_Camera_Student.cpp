@@ -19,7 +19,9 @@
 using namespace std;
 
 /* parameters for play around */
-#define DETECTOR_TYPE "SIFT"
+#define DETECTOR_TYPE "BRISK" // SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
+#define DESCRIPTOR_TYPE "BRISK" // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+
 #define VIS_KEYPOINTS false
 #define FOCUS_ON_VEHICLE true
 #define LIMIT_KEYPOINTS false
@@ -81,7 +83,7 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = DETECTOR_TYPE; // SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
+        string detectorType = DETECTOR_TYPE;
         bool vis_kpts = VIS_KEYPOINTS;
 
         //// STUDENT ASSIGNMENT
@@ -146,7 +148,7 @@ int main(int argc, const char *argv[])
         //// -> BRIEF, ORB, FREAK, AKAZE, SIFT
 
         cv::Mat descriptors;
-        string descriptorType = "BRISK"; // BRIEF, ORB, FREAK, AKAZE, SIFT
+        string descriptorType = DESCRIPTOR_TYPE;
         descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
         //// EOF STUDENT ASSIGNMENT
 
