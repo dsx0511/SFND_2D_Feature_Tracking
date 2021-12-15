@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <numeric>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -22,7 +23,7 @@ using namespace std;
 #define DETECTOR_TYPE "SIFT" // SHITOMASI, HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
 #define DESCRIPTOR_TYPE "SIFT" // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
-#define MATCHER_TYPE "MAT_FLANN" // MAT_BF, MAT_FLANN
+#define MATCHER_TYPE "MAT_BF" // MAT_BF, MAT_FLANN
 #define MACTHER_DESCRIPTOR_TYPE "DES_HOG" // DES_BINARY, DES_HOG
 #define MATCHER_SELECTOR_TYPE "SEL_KNN" // SEL_NN, SEL_KNN
 
@@ -53,6 +54,9 @@ int main(int argc, const char *argv[])
     bool bVis = false;            // visualize results
 
     /* MAIN LOOP OVER ALL IMAGES */
+    remove("example.csv");
+    std::ofstream output;
+    output.open("example.csv");
 
     for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
     {
@@ -125,6 +129,28 @@ int main(int argc, const char *argv[])
             }
         }
 
+        //// TASK MP.7 -> number of keypoints and neighborhood size
+        // cout << "Number of keypoints on the preceding vehicle: " << keypoints.size() << endl;
+        // vector<int> keypoint_size;
+        // for (auto keypoint : keypoints)
+        // {
+        //     keypoint_size.push_back(keypoint.size);
+        //     cout << keypoint.size << " ";
+        // }
+        // cout << endl;
+
+        // double mean = accumulate(keypoint_size.begin(), keypoint_size.end(), 0.0) / keypoint_size.size();
+        // auto add_square = [mean](double sum, int i)
+        // {
+        //     auto d = i - mean;
+        //     return sum + d*d;
+        // };
+        // double total = accumulate(keypoint_size.begin(), keypoint_size.end(), 0.0, add_square);
+        // double variance = sqrt(total / keypoint_size.size());
+
+        // cout << "The distribution of their neighborhood size: mean " << mean << ", variance " << variance << endl;
+
+
         //// EOF STUDENT ASSIGNMENT
 
         // optional : limit number of keypoints (helpful for debugging and learning)
@@ -180,6 +206,7 @@ int main(int argc, const char *argv[])
                              matches, descriptorType, matcherType, selectorType);
 
             //// EOF STUDENT ASSIGNMENT
+            output << "  " << matches.size() << " |";
 
             // store matches in current data frame
             (dataBuffer.end() - 1)->kptMatches = matches;
@@ -207,6 +234,8 @@ int main(int argc, const char *argv[])
         }
 
     } // eof loop over all images
+
+    output.close();
 
     return 0;
 }
