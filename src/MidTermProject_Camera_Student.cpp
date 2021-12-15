@@ -54,9 +54,6 @@ int main(int argc, const char *argv[])
     bool bVis = false;            // visualize results
 
     /* MAIN LOOP OVER ALL IMAGES */
-    remove("example.csv");
-    std::ofstream output;
-    output.open("example.csv");
 
     for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
     {
@@ -206,7 +203,6 @@ int main(int argc, const char *argv[])
                              matches, descriptorType, matcherType, selectorType);
 
             //// EOF STUDENT ASSIGNMENT
-            output << "  " << matches.size() << " |";
 
             // store matches in current data frame
             (dataBuffer.end() - 1)->kptMatches = matches;
@@ -234,8 +230,6 @@ int main(int argc, const char *argv[])
         }
 
     } // eof loop over all images
-
-    output.close();
 
     return 0;
 }
