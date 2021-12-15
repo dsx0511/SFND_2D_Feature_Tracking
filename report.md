@@ -18,7 +18,7 @@ The keypoints are removed if `cv::Rect::contain` returns `false`.
 ## MP.4 Keypoint Descriptors
 All the keypoint descriptors are built-in functions in Opencv.
 They are selectable in the function `descKeypoints` by comparing the name string.
-Similar to the keypoint detectors, all the keypoint descriptors can be created using `cv::(name)::create` which returns a `cv::Ptr<cv::DescriptorExtractor>` instance based the name of descriptor.
+Similar to the keypoint detectors, all the keypoint descriptors can be created using `cv::(name)::create` which returns a `cv::Ptr<cv::DescriptorExtractor>` instance based on the name of descriptor.
 
 ## MP.5 Descriptor Matching
 Both FLANN matching and k-nearest neighbor selection are built-in function in opencv.
@@ -199,4 +199,27 @@ For each keypoint descriptor, the numbers of matched keypoints of every keypoint
     | AKAZE     |  10.9 |  9.58 |  10 |  9.98 |  12.1 |  11.1 |  10.3 |  10.5 |  10.8 |  10 |
     | SIFT      |  48.2 |  35.3 |  35.3 |  33.2 |  34.1 |  33.8 |  36 |  36.3 |  35.6 |  34.9 |
 
-### Conclusion
+### Conclusion & Recommendations
+
+
+1. SIFT detector + SIFT descriptor:
+
+    The SIFT detector is able to detecting most discriminative points as keypoints by qualitative evaluation.
+    As shown in the table for neighborhood distribution, SIFT detector is able to find keypoints with a high variety of neighborhood size that consider features in different scales.
+    SIFT descriptor provides a good performance as discussed in the lesson.
+    Also, the number of matched keypoints is high compared to the number of all keypoints detected.
+    The only weakness of this combination is its runtime.
+
+2. BRISK detector + SIFT descriptor
+
+    This combination has a good performance and efficiency balance, where the runtime is reduced surprisingly compared to using SIFT detector.
+    BRISK detector is also able to cover features in different scales while detecting more keypoints than SIFT.
+    In addition, using SIFT descriptor, more BRISK keypoints are matched than all other descriptors.
+    However, BRISK keypoint detector produces keypoints with general larger size, which could be a concern that the performance is not as good as SIFT detector because the object size is not very large.
+
+3. FAST detector + ORB descriptor
+    
+    This combination provides the best efficiency.
+    FAST detector runs significantly faster than all other keypoint detectors.
+    ORB descriptor also runs fast in combination of FAST detector despite the large number of keypoints provided by FAST.
+    In addition, ORB descriptor is able to provide relative more matched FAST keypoints, which could boost the performance. 
