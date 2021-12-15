@@ -1,46 +1,68 @@
 # Mid-term Report
 
-## Data Buffer
+## MP.1 Data Buffer Optimization
+First, the new element is pushed in on the end of the `std::vector` data buffer.
+After that, the length of the data buffer is checked.
+If the length is greater than the pre-defined data buffer size (2 here), the oldest element is removed using `std::vector::erase`.
 
-## Keypoints
+## MP.2 Keypoint Detection
+All the keypoints are built-in functions in Opencv.
+The Harris keypoint detection with NMS is implemented in the function `detKeypointsHarris` similar to the one in the exercise.
+An instance of other detectors with the type `cv::Ptr<cv::FeatureDetector> ` can be created using `cv::(name)::create`, where `(name)` corresponds to the name of the keypoint detector.
+Thus they are called in the function `detKeypointsModern` by selecting them using their name.
 
-## Descriptors
+## MP.3 Keypoint Removal
+The pre-defined area is represented as `cv::Rect`.
+The keypoints are removed if `cv::Rect::contain` returns `false`.
 
+## MP.4 Keypoint Descriptors
+All the keypoint descriptors are built-in functions in Opencv.
+They are selectable in the function `descKeypoints` by comparing the name string.
+Similar to the keypoint detectors, all the keypoint descriptors can be created using `cv::(name)::create` which returns a `cv::Ptr<cv::DescriptorExtractor>` instance based the name of descriptor.
 
-## Performance
+## MP.5 Descriptor Matching
+Both FLANN matching and k-nearest neighbor selection are built-in function in opencv.
+They are implemented in the function `matchDescriptors` and can be called by setting `matcherType` to `MAT_FLANN` and setting `selectorType` to `SEL_KNN`.
+
+## MP.6 Descriptor Distance Ratio
+The descriptor distance ratio is implemented in the same way in the exercise.
+It compares the distance between best and second-best matchings.
+If the distance ratio between both matchings is below a threshold (0.8 here), the best matching is kept.
 
 ## MP.7 Performance Evaluation 1
+### number of keypoints on the preceding vehicle:
+| Frame | SHITOMASI | HARRIS | FAST | BRISK | ORB | AKAZE | SIFT |
+| :---: | :-------: | ------ | ---- | ----- | --- | ----- | ---- |
+| 1     | 125       | 17     | 419  | 264   | 92  | 166   | 138  |
+| 2     | 118       | 14     | 427  | 282   | 102 | 157   | 132  |
+| 3     | 123       | 18     | 404  | 282   | 106 | 161   | 124  |
+| 4     | 120       | 21     | 423  | 277   | 113 | 155   | 138  |
+| 5     | 120       | 26     | 386  | 297   | 109 | 163   | 134  |
+| 6     | 113       | 43     | 414  | 279   | 125 | 164   | 140  |
+| 7     | 114       | 18     | 418  | 289   | 130 | 173   | 137  |
+| 8     | 123       | 31     | 406  | 272   | 129 | 175   | 148  |
+| 9     | 111       | 26     | 396  | 266   | 127 | 177   | 159  |
+| 20    | 112       | 34     | 401  | 254   | 128 | 179   | 137  |
 
-* Keypoint numbers of each frame:
-    | Frame | SHITOMASI | HARRIS | FAST | BRISK | ORB | AKAZE | SIFT |
-    | :---: | :-------: | ------ | ---- | ----- | --- | ----- | ---- |
-    | 1     | 125       | 17     | 419  | 264   | 92  | 166   | 138  |
-    | 2     | 118       | 14     | 427  | 282   | 102 | 157   | 132  |
-    | 3     | 123       | 18     | 404  | 282   | 106 | 161   | 124  |
-    | 4     | 120       | 21     | 423  | 277   | 113 | 155   | 138  |
-    | 5     | 120       | 26     | 386  | 297   | 109 | 163   | 134  |
-    | 6     | 113       | 43     | 414  | 279   | 125 | 164   | 140  |
-    | 7     | 114       | 18     | 418  | 289   | 130 | 173   | 137  |
-    | 8     | 123       | 31     | 406  | 272   | 129 | 175   | 148  |
-    | 9     | 111       | 26     | 396  | 266   | 127 | 177   | 159  |
-    | 20    | 112       | 34     | 401  | 254   | 128 | 179   | 137  |
-
-* Distribution of their neighborhood size (mean &#177; variance):
-    |  <i></i>  | SHITOMASI  | HARRIS     | FAST       | BRISK              | ORB                | AKAZE            | SIFT             |
-    |  :-----:  | :-------:  | ------     | ----       | -----              | ---                | -----            | ----             |
-    | 1         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.11 &#177; 14.64 | 56.78 &#177; 25.69 | 7.20 &#177; 4.09 | 4.54 &#177; 5.87 | 
-    | 2         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.35 &#177; 14.62 | 56.94 &#177; 26.08 | 6.96 &#177; 3.69 | 4.62 &#177; 6.16 | 
-    | 3         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.20 &#177; 13.87 | 56.22 &#177; 25.89 | 6.91 &#177; 3.72 | 4.46 &#177; 6.01 | 
-    | 4         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 19.93 &#177; 12.66 | 54.85 &#177; 25.06 | 7.05 &#177; 3.64 | 4.22 &#177; 5.29 | 
-    | 5         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 22.18 &#177; 14.93 | 56.45 &#177; 24.99 | 7.23 &#177; 3.62 | 4.21 &#177; 5.56 | 
-    | 6         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 22.52 &#177; 15.90 | 56.32 &#177; 24.41 | 7.18 &#177; 3.56 | 4.15 &#177; 5.60 | 
-    | 7         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.38 &#177; 14.76 | 56.48 &#177; 25.40 | 7.24 &#177; 3.62 | 4.86 &#177; 6.51 | 
-    | 8         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.71 &#177; 15.12 | 55.15 &#177; 25.71 | 7.33 &#177; 3.70 | 4.02 &#177; 5.17 | 
-    | 9         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 22.11 &#177; 15.25 | 54.40 &#177; 25.23 | 7.32 &#177; 3.68 | 4.96 &#177; 6.76 | 
-    | 10        | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.59 &#177; 14.72 | 54.09 &#177; 23.64 | 7.40 &#177; 3.77 | 5.09 &#177; 6.67 | 
+### Distribution of their neighborhood size (represented as "mean &#177; variance" in each cell):
+|  <i></i>  | SHITOMASI  | HARRIS     | FAST       | BRISK              | ORB                | AKAZE            | SIFT             |
+|  :-----:  | :-------:  | ------     | ----       | -----              | ---                | -----            | ----             |
+| 1         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.11 &#177; 14.64 | 56.78 &#177; 25.69 | 7.20 &#177; 4.09 | 4.54 &#177; 5.87 | 
+| 2         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.35 &#177; 14.62 | 56.94 &#177; 26.08 | 6.96 &#177; 3.69 | 4.62 &#177; 6.16 | 
+| 3         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.20 &#177; 13.87 | 56.22 &#177; 25.89 | 6.91 &#177; 3.72 | 4.46 &#177; 6.01 | 
+| 4         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 19.93 &#177; 12.66 | 54.85 &#177; 25.06 | 7.05 &#177; 3.64 | 4.22 &#177; 5.29 | 
+| 5         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 22.18 &#177; 14.93 | 56.45 &#177; 24.99 | 7.23 &#177; 3.62 | 4.21 &#177; 5.56 | 
+| 6         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 22.52 &#177; 15.90 | 56.32 &#177; 24.41 | 7.18 &#177; 3.56 | 4.15 &#177; 5.60 | 
+| 7         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.38 &#177; 14.76 | 56.48 &#177; 25.40 | 7.24 &#177; 3.62 | 4.86 &#177; 6.51 | 
+| 8         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.71 &#177; 15.12 | 55.15 &#177; 25.71 | 7.33 &#177; 3.70 | 4.02 &#177; 5.17 | 
+| 9         | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 22.11 &#177; 15.25 | 54.40 &#177; 25.23 | 7.32 &#177; 3.68 | 4.96 &#177; 6.76 | 
+| 10        | 4 &#177; 0 | 6 &#177; 0 | 7 &#177; 0 | 21.59 &#177; 14.72 | 54.09 &#177; 23.64 | 7.40 &#177; 3.77 | 5.09 &#177; 6.67 | 
 
 
 ## MP.8 Performance Evaluation 2
+
+### Number of matched keypoints 
+For each keypoint descriptor, the numbers of matched keypoints of every keypoint detector for all 10 frames are shown in a table.
 
 * BRISK descriptor
     | Keypoints | 1-2 | 2-3 | 3-4 | 4-5 | 5-6 | 6-7 | 7-8 | 8-9 | 9-10 |
@@ -64,7 +86,7 @@
     | AKAZE     | 141 | 134 | 131 | 130 | 134 | 146 | 150 | 148 |  152 |
     | SIFT      |  86 |  78 |  77 |  86 |  69 |  74 |  76 |  70 |  88  |
 
-* ORB descriptor
+* ORB descriptor (ORB doesn't work with SIFT keypoint detctor.)
     | Keypoints | 1-2 | 2-3 | 3-4 | 4-5 | 5-6 | 6-7 | 7-8 | 8-9 | 9-10 |
     | :---:     | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-:  |
     | SHITOMASI | 106 | 102 |  99 | 102 | 103 |  97 |  98 | 104 |  97  |
@@ -86,7 +108,7 @@
     | AKAZE     | 126 | 129 | 127 | 121 | 122 | 133 | 144 | 147 |  138 |
     | SIFT      |  65 |  72 |  65 |  67 |  59 |  59 |  64 |  65 |  79  |
 
-* AKAZE descriptor
+* AKAZE descriptor (AKAZE only works with AKAZE keypoint detector.)
     | Keypoints | 1-2 | 2-3 | 3-4 | 4-5 | 5-6 | 6-7 | 7-8 | 8-9 | 9-10 |
     | :---:     | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-:  |
     | AKAZE     | 138 | 138 | 133 | 127 | 129 | 146 | 147 | 151 |  150 |
@@ -105,7 +127,7 @@
 
 ## MP.9 Performance Evaluation 3
 
-### Keypoints
+### Runtime of keypoint detectors
 | Types     | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
 | :---:     | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-:  | :-:  |
 | SHITOMASI | 12.49 | 8.51 | 9.46 | 29.98 | 13.35 | 13.55 | 14.62 | 17.57 | 17.80 | 17.50 | 
@@ -116,7 +138,7 @@
 | AKAZE     | 40.82 | 34.47 | 38.73 | 38.56 | 37.27 | 35.69 | 34.07 | 54.34 | 32.35 | 33.35 |
 | SIFT      | 54.07 | 47.43 | 42.96 | 40.61 | 42.54 | 37.79 | 40.67 | 63.91 | 40.76 | 37.09 | 
 
-### Descriptors 
+### Runtime of keypoint descriptors in combination of every keypoint detector 
 * BRISK descriptor
     | Keypoints | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
     | :---:     | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-:  | :-:  |
@@ -176,3 +198,5 @@
     | ORB       |  18.8 |  14.7 |  16.6 |  22.8 |  23.9 |  21.6 |  22.9 |  23.8 |  18.8 |  24.4 |
     | AKAZE     |  10.9 |  9.58 |  10 |  9.98 |  12.1 |  11.1 |  10.3 |  10.5 |  10.8 |  10 |
     | SIFT      |  48.2 |  35.3 |  35.3 |  33.2 |  34.1 |  33.8 |  36 |  36.3 |  35.6 |  34.9 |
+
+### Conclusion
